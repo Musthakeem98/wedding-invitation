@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1F120A" />
+  <title>Musthakeem &amp; Safra — Wedding Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Lottie animation player for bride & groom -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div class="preloader" id="preloader">
+    <div class="pre-ring"></div>
+    <p class="pre-text">Bismillāhir Raḥmānir Raḥīm</p>
+  </div>
+
+  <!-- AMBIENT SPARKLES -->
+  <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+
+  <!-- CELEBRATION OVERLAY (confetti/fireworks on entry) -->
+  <div class="celebration" id="celebration" aria-hidden="true"></div>
+  <div class="flash" id="flash" aria-hidden="true"></div>
+  <div class="starburst" id="starburst" aria-hidden="true">
+    <svg viewBox="0 0 200 200" width="200" height="200">
+      <defs>
+        <radialGradient id="starGrad">
+          <stop offset="0%" stop-color="#FFF8E7" stop-opacity="1"/>
+          <stop offset="30%" stop-color="#E6C88A" stop-opacity="0.8"/>
+          <stop offset="70%" stop-color="#D4A659" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#8C6A36" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="90" fill="url(#starGrad)"/>
+      <g stroke="#E6C88A" stroke-width="1.5" opacity="0.9">
+        <line x1="100" y1="10" x2="100" y2="30"/>
+        <line x1="100" y1="170" x2="100" y2="190"/>
+        <line x1="10" y1="100" x2="30" y2="100"/>
+        <line x1="170" y1="100" x2="190" y2="100"/>
+        <line x1="30" y1="30" x2="45" y2="45"/>
+        <line x1="155" y1="155" x2="170" y2="170"/>
+        <line x1="170" y1="30" x2="155" y2="45"/>
+        <line x1="30" y1="170" x2="45" y2="155"/>
+      </g>
+    </svg>
+  </div>
+  <div class="welcome-text" id="welcomeText" aria-hidden="true">
+    <span>Bismillah</span>
+    <em>Welcome to Our Wedding</em>
+  </div>
+
+  <!-- ============ ENVELOPE ============ -->
+  <section class="envelope-scene" id="envelopeScene">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <div class="envelope-wrapper" id="envelopeWrapper">
+      <div class="envelope-shadow"></div>
+
+      <div class="envelope" id="envelope">
+        <div class="env-back"></div>
+
+        <div class="letter" id="letter">
+          <div class="letter-inner">
+            <div class="letter-ornament">
+              <svg viewBox="0 0 120 20" width="120" height="20">
+                <line x1="0" y1="10" x2="46" y2="10" stroke="currentColor" stroke-width="0.6"/>
+                <path d="M 46 10 Q 54 4, 60 10 Q 66 16, 74 10" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                <circle cx="60" cy="10" r="1.6" fill="currentColor"/>
+                <line x1="74" y1="10" x2="120" y2="10" stroke="currentColor" stroke-width="0.6"/>
+              </svg>
+            </div>
+            <p class="letter-eyebrow">Bismillāhir Raḥmānir Raḥīm</p>
+            <h2 class="letter-title">You are Invited</h2>
+            <div class="letter-names">
+              <span>Musthakeem</span>
+              <em>&amp;</em>
+              <span>Safra</span>
+            </div>
+            <p class="letter-date">01 · 08 · 2026</p>
+            <button class="btn-primary" id="openFullBtn">
+              <span>Open Invitation</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="env-front"></div>
+        <div class="ribbon"></div>
+        <div class="ribbon-knot"></div>
+
+        <div class="env-flap" id="envFlap">
+          <div class="seal" id="seal">
+            <div class="seal-inner">
+              <span>M<em>&amp;</em>S</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="tap-hint" id="tapHint">
+        <span class="hint-dot"></span>
+        <span>Tap the seal to open</span>
+        <span class="hint-dot"></span>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ============ MAIN EXPERIENCE ============ -->
+  <main class="experience" id="invitation">
+
+    <!-- Falling petals overlay -->
+    <div class="petals" aria-hidden="true">
+      <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+      <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+      <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+      <span class="petal"></span><span class="petal"></span><span class="petal"></span>
+    </div>
+
+
+    <!-- ============ SCENE 1 · GRAND REVEAL ============ -->
+    <section class="scene grand" id="grand">
+      <div class="grand-bg"></div>
+      <div class="grand-glow"></div>
+
+      <p class="grand-eyebrow">The Wedding Of</p>
+
+      <!-- Floating decorative emoji particles -->
+      <div class="floating-emojis" aria-hidden="true">
+        <span class="fe fe-1">💍</span>
+        <span class="fe fe-2">✨</span>
+        <span class="fe fe-3">🌹</span>
+        <span class="fe fe-4">💕</span>
+        <span class="fe fe-5">✨</span>
+        <span class="fe fe-6">🌸</span>
+        <span class="fe fe-7">💫</span>
+        <span class="fe fe-8">🌷</span>
+      </div>
+
+      <!-- Bride & Groom Animated Figures -->
+      <div class="couple-stage">
+        <div class="figure figure-groom" id="figGroom">
+          <div class="figure-spotlight"></div>
+          <div class="orbit orbit-1"><span class="orbit-dot"></span></div>
+          <div class="orbit orbit-2"><span class="orbit-dot"></span></div>
+          <div class="figure-frame">
+            <div class="figure-inner">
+              <lottie-player
+                class="lottie-figure"
+                src="https://assets10.lottiefiles.com/packages/lf20_dyofwjwv.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+                aria-hidden="true"
+              ></lottie-player>
+              <span class="figure-emoji figure-fallback">🤵🏻‍♂️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="couple-center">
+          <div class="heart-pulse">
+            <svg viewBox="0 0 40 40" width="30" height="30" fill="currentColor">
+              <path d="M20 34 L6 20 Q1 15 1 10 Q1 4 7 4 Q13 4 20 12 Q27 4 33 4 Q39 4 39 10 Q39 15 34 20 Z"/>
+            </svg>
+          </div>
+          <div class="heart-ring"></div>
+          <div class="heart-ring heart-ring-2"></div>
+        </div>
+
+        <div class="figure figure-bride" id="figBride">
+          <div class="figure-spotlight"></div>
+          <div class="orbit orbit-1"><span class="orbit-dot"></span></div>
+          <div class="orbit orbit-2"><span class="orbit-dot"></span></div>
+          <div class="figure-frame">
+            <div class="figure-inner">
+              <lottie-player
+                class="lottie-figure"
+                src="https://assets10.lottiefiles.com/packages/lf20_gxynwlxb.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+                aria-hidden="true"
+              ></lottie-player>
+              <span class="figure-emoji figure-fallback">👰🏻‍♀️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Highlighted Couple Names -->
+      <div class="grand-names">
+        <h1 class="grand-name" id="grName1">Musthakeem</h1>
+        <div class="grand-amp-row">
+          <span class="grand-line"></span>
+          <span class="grand-amp">&amp;</span>
+          <span class="grand-line"></span>
+        </div>
+        <h1 class="grand-name" id="grName2">Safra</h1>
+      </div>
+
+      <div class="grand-date">
+        <span class="gd-label">Saturday</span>
+        <span class="gd-main">01 · August · 2026</span>
+        <span class="gd-label">12:00 PM</span>
+      </div>
+
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <span class="scroll-arrow"></span>
+      </div>
+    </section>
+
+
+    <!-- ============ SCENE 2 · THE INVITATION ============ -->
+    <section class="scene invite-scene reveal">
+      <div class="invite-frame">
+        <svg class="corner-orn tl" viewBox="0 0 80 80" width="60" height="60">
+          <path d="M 5 40 Q 5 5, 40 5" stroke="currentColor" stroke-width="0.8" fill="none"/>
+          <path d="M 5 40 Q 20 20, 40 20 Q 60 20, 60 40" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <circle cx="40" cy="5" r="2" fill="currentColor"/>
+          <circle cx="5" cy="40" r="2" fill="currentColor"/>
+        </svg>
+        <svg class="corner-orn tr" viewBox="0 0 80 80" width="60" height="60">
+          <path d="M 75 40 Q 75 5, 40 5" stroke="currentColor" stroke-width="0.8" fill="none"/>
+          <path d="M 75 40 Q 60 20, 40 20 Q 20 20, 20 40" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <circle cx="40" cy="5" r="2" fill="currentColor"/>
+          <circle cx="75" cy="40" r="2" fill="currentColor"/>
+        </svg>
+        <svg class="corner-orn bl" viewBox="0 0 80 80" width="60" height="60">
+          <path d="M 5 40 Q 5 75, 40 75" stroke="currentColor" stroke-width="0.8" fill="none"/>
+          <path d="M 5 40 Q 20 60, 40 60 Q 60 60, 60 40" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <circle cx="40" cy="75" r="2" fill="currentColor"/>
+          <circle cx="5" cy="40" r="2" fill="currentColor"/>
+        </svg>
+        <svg class="corner-orn br" viewBox="0 0 80 80" width="60" height="60">
+          <path d="M 75 40 Q 75 75, 40 75" stroke="currentColor" stroke-width="0.8" fill="none"/>
+          <path d="M 75 40 Q 60 60, 40 60 Q 20 60, 20 40" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <circle cx="40" cy="75" r="2" fill="currentColor"/>
+          <circle cx="75" cy="40" r="2" fill="currentColor"/>
+        </svg>
+
+        <p class="eyebrow">﷽</p>
+        <p class="verse">
+          "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy."
+          <span class="verse-ref">— The Noble Qur'an · 30:21</span>
+        </p>
+
+        <p class="together">Together with our families, we joyfully request<br />the honor of your presence at our wedding</p>
+
+        <div class="formal-names">
+          <div class="fn-item">
+            <h2 class="fn-highlight">Musthakeem</h2>
+            <p class="fn-full">Mohammed Kiyas Musthakeem Ahamed</p>
+          </div>
+          <div class="fn-and">
+            <span class="fn-and-line"></span>
+            <span class="fn-and-symbol">&amp;</span>
+            <span class="fn-and-line"></span>
+          </div>
+          <div class="fn-item">
+            <h2 class="fn-highlight">Safra</h2>
+            <p class="fn-full">Mohamadh Siraj Fathima Safra</p>
+          </div>
+        </div>
+
+        <p class="blessing-line">
+          <em>With the blessings of the parents · Mr. Mohamed Kiyas &amp; Mr. Mohamadh Siraj</em>
+        </p>
+      </div>
+    </section>
+
+
+    <!-- ============ SCENE 3 · SAVE THE DATE ============ -->
+    <section class="scene date-scene reveal">
+      <p class="section-eyebrow">Save The Date</p>
+      <div class="big-date">
+        <div class="bd-side">
+          <span class="bd-line"></span>
+          <span class="bd-label">Saturday</span>
+        </div>
+        <div class="bd-center">
+          <span class="bd-day">01</span>
+          <span class="bd-month">August</span>
+          <span class="bd-year">2026</span>
+        </div>
+        <div class="bd-side">
+          <span class="bd-label">12:00 PM</span>
+          <span class="bd-line"></span>
+        </div>
+      </div>
+
+      <div class="section-title-orn">
+        <svg viewBox="0 0 100 10" width="80" height="10">
+          <line x1="0" y1="5" x2="40" y2="5" stroke="currentColor" stroke-width="0.5"/>
+          <circle cx="50" cy="5" r="2" fill="currentColor"/>
+          <line x1="60" y1="5" x2="100" y2="5" stroke="currentColor" stroke-width="0.5"/>
+        </svg>
+      </div>
+
+      <h3 class="section-title">Counting Every Moment</h3>
+
+      <div class="countdown" id="countdown">
+        <div class="cd-box"><span id="cdDays">00</span><small>Days</small></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-box"><span id="cdHours">00</span><small>Hours</small></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-box"><span id="cdMins">00</span><small>Minutes</small></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-box"><span id="cdSecs">00</span><small>Seconds</small></div>
+      </div>
+    </section>
+
+
+    <!-- ============ SCENE 4 · VENUE ============ -->
+    <section class="scene venue-scene reveal">
+      <p class="section-eyebrow">The Celebration</p>
+      <h3 class="section-title">Join Us At</h3>
+      <div class="section-title-orn">
+        <svg viewBox="0 0 100 10" width="80" height="10">
+          <line x1="0" y1="5" x2="40" y2="5" stroke="currentColor" stroke-width="0.5"/>
+          <circle cx="50" cy="5" r="2" fill="currentColor"/>
+          <line x1="60" y1="5" x2="100" y2="5" stroke="currentColor" stroke-width="0.5"/>
+        </svg>
+      </div>
+
+      <div class="venue-card">
+        <div class="venue-icon">
+          <svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M12 22s-8-7.5-8-13a8 8 0 1116 0c0 5.5-8 13-8 13z"/>
+            <circle cx="12" cy="9" r="3"/>
+          </svg>
+        </div>
+        <h4 class="venue-name">Ilma Reception Hall</h4>
+        <div class="venue-orn">
+          <svg viewBox="0 0 120 10" width="100" height="10">
+            <line x1="0" y1="5" x2="50" y2="5" stroke="currentColor" stroke-width="0.5"/>
+            <path d="M 55 2 L 60 8 L 65 2" stroke="currentColor" stroke-width="0.6" fill="none"/>
+            <line x1="70" y1="5" x2="120" y2="5" stroke="currentColor" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <p class="venue-address">Nayawela, Mawanella<br />Sri Lanka</p>
+        <p class="venue-time">Saturday · 01 August 2026<br /><em>12:00 PM Onwards</em></p>
+        <a class="btn-primary btn-gold" href="https://maps.app.goo.gl/QYHFU3N4hp8iLzah9" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;">
+            <path d="M12 22s-8-7.5-8-13a8 8 0 1116 0c0 5.5-8 13-8 13z"/>
+            <circle cx="12" cy="9" r="3"/>
+          </svg>
+          <span>View on Google Maps</span>
+        </a>
+
+        <div class="dress-inline">
+          <p class="dress-inline-label">Dress Code for Guests</p>
+          <div class="swatches">
+            <span class="sw sw-beige" title="Warm Beige"></span>
+            <span class="sw sw-gray" title="Soft Gray"></span>
+          </div>
+          <p class="dress-inline-note">Beige &amp; Gray</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============ SCENE 6 · RSVP ============ -->
+    <section class="scene rsvp-scene reveal">
+      <div class="rsvp-card">
+        <div class="rsvp-orn">
+          <svg viewBox="0 0 100 20" width="100" height="20">
+            <path d="M 20 10 Q 35 -2, 50 10 Q 65 22, 80 10" stroke="currentColor" stroke-width="0.8" fill="none"/>
+            <circle cx="50" cy="10" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <p class="section-eyebrow">Kindly RSVP</p>
+        <h3 class="section-title">Your Presence Is A Blessing</h3>
+        <p class="rsvp-text">Please confirm your attendance so we may<br />share this joyous day with you.</p>
+        <a class="btn-primary btn-whatsapp" id="rsvpBtn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right:10px;vertical-align:-3px;">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.03 21.5c-1.68 0-3.29-.443-4.702-1.28l-3.288.862.878-3.202A9.44 9.44 0 012.532 12.02C2.532 6.786 6.787 2.53 12.03 2.53c2.535 0 4.918.988 6.71 2.784a9.406 9.406 0 012.783 6.71c-.002 5.235-4.256 9.476-9.494 9.476z"/>
+          </svg>
+          <span>RSVP via WhatsApp</span>
+        </a>
+        <p class="rsvp-phone">or call <a href="tel:+94774804214">+94 77 480 4214</a></p>
+      </div>
+    </section>
+
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="foot reveal">
+      <div class="foot-seal">
+        <div class="foot-seal-inner">
+          <span>M<em>&amp;</em>S</span>
+        </div>
+      </div>
+      <p class="foot-names">Musthakeem &amp; Safra</p>
+      <div class="foot-orn">
+        <svg viewBox="0 0 200 12" width="180" height="12">
+          <line x1="0" y1="6" x2="80" y2="6" stroke="currentColor" stroke-width="0.5"/>
+          <circle cx="100" cy="6" r="2" fill="currentColor"/>
+          <line x1="120" y1="6" x2="200" y2="6" stroke="currentColor" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <p class="foot-date">01 · 08 · 2026</p>
+      <p class="foot-loc">Ilma Reception Hall · Mawanella · Sri Lanka</p>
+      <p class="foot-tag"><em>"Two souls united by faith and love."</em></p>
+      <p class="foot-bismillah">Alhamdulillah</p>
+    </footer>
+
+  </main>
+
+
+  <!-- MUSIC TOGGLE -->
+  <button class="music-toggle" id="musicToggle" aria-label="Toggle music">
+    <svg id="musicIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M9 17V5l12-2v12"/>
+      <circle cx="6" cy="17" r="3"/>
+      <circle cx="18" cy="15" r="3"/>
+    </svg>
+  </button>
+  <audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
