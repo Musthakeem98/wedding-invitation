@@ -11,7 +11,7 @@
   /* --------- Preloader --------- */
   const preloader = $('#preloader');
   window.addEventListener('load', () => {
-    setTimeout(() => preloader.classList.add('hide'), 1400);
+    setTimeout(() => preloader.classList.add('hide'), 2600);
   });
 
   /* --------- Lottie load detection (fall back to emoji if animations don't load) --------- */
@@ -71,8 +71,11 @@
     if (tapHint) tapHint.classList.add('hide');
   }
 
-  envelope.addEventListener('click', openEnvelope);
-  envelope.addEventListener('touchstart', (e) => { e.preventDefault(); openEnvelope(); }, { passive: false });
+  envelope.addEventListener('click', (e) => {
+    // Don't intercept the "Open Invitation" button — let its own handler fire
+    if (e.target.closest('#openFullBtn')) return;
+    openEnvelope();
+  });
 
   openFullBtn.addEventListener('click', () => {
     // Big celebration first

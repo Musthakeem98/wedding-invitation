@@ -7,7 +7,7 @@
   <title>Musthakeem &amp; Safra — Wedding Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <!-- Lottie animation player for bride & groom -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
@@ -17,7 +17,9 @@
   <!-- PRELOADER -->
   <div class="preloader" id="preloader">
     <div class="pre-ring"></div>
-    <p class="pre-text">Bismillāhir Raḥmānir Raḥīm</p>
+    <p class="pre-arabic">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+    <p class="pre-text">Assalāmu ʿAlaikum Wa Raḥmatullāhi Wa Barakātuh</p>
+    <p class="pre-sub">Peace, mercy and blessings of Allah be upon you</p>
   </div>
 
   <!-- AMBIENT SPARKLES -->
@@ -54,7 +56,7 @@
     <em>Welcome to Our Wedding</em>
   </div>
 
-  <!-- ============ ENVELOPE ============ -->
+  <!-- ============ ENVELOPE + LETTER ============ -->
   <section class="envelope-scene" id="envelopeScene">
     <div class="bg-orb bg-orb-1"></div>
     <div class="bg-orb bg-orb-2"></div>
@@ -67,25 +69,53 @@
 
         <div class="letter" id="letter">
           <div class="letter-inner">
-            <div class="letter-ornament">
-              <svg viewBox="0 0 120 20" width="120" height="20">
-                <line x1="0" y1="10" x2="46" y2="10" stroke="currentColor" stroke-width="0.6"/>
-                <path d="M 46 10 Q 54 4, 60 10 Q 66 16, 74 10" stroke="currentColor" stroke-width="0.8" fill="none"/>
-                <circle cx="60" cy="10" r="1.6" fill="currentColor"/>
-                <line x1="74" y1="10" x2="120" y2="10" stroke="currentColor" stroke-width="0.6"/>
+            <!-- Corner ornaments -->
+            <svg class="letter-corner tl" viewBox="0 0 40 40" width="24" height="24">
+              <path d="M 2 20 Q 2 2, 20 2" stroke="currentColor" stroke-width="0.7" fill="none"/>
+              <circle cx="20" cy="2" r="1" fill="currentColor"/>
+              <circle cx="2" cy="20" r="1" fill="currentColor"/>
+            </svg>
+            <svg class="letter-corner tr" viewBox="0 0 40 40" width="24" height="24">
+              <path d="M 38 20 Q 38 2, 20 2" stroke="currentColor" stroke-width="0.7" fill="none"/>
+              <circle cx="20" cy="2" r="1" fill="currentColor"/>
+              <circle cx="38" cy="20" r="1" fill="currentColor"/>
+            </svg>
+            <svg class="letter-corner bl" viewBox="0 0 40 40" width="24" height="24">
+              <path d="M 2 20 Q 2 38, 20 38" stroke="currentColor" stroke-width="0.7" fill="none"/>
+              <circle cx="20" cy="38" r="1" fill="currentColor"/>
+              <circle cx="2" cy="20" r="1" fill="currentColor"/>
+            </svg>
+            <svg class="letter-corner br" viewBox="0 0 40 40" width="24" height="24">
+              <path d="M 38 20 Q 38 38, 20 38" stroke="currentColor" stroke-width="0.7" fill="none"/>
+              <circle cx="20" cy="38" r="1" fill="currentColor"/>
+              <circle cx="38" cy="20" r="1" fill="currentColor"/>
+            </svg>
+
+            <p class="letter-bismillah">﷽</p>
+            <p class="letter-eyebrow">— Bismillāhir Raḥmānir Raḥīm —</p>
+
+            <div class="letter-divider">
+              <svg viewBox="0 0 120 12" width="90" height="10">
+                <line x1="0" y1="6" x2="46" y2="6" stroke="currentColor" stroke-width="0.6"/>
+                <path d="M 46 6 Q 54 0, 60 6 Q 66 12, 74 6" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                <circle cx="60" cy="6" r="1.6" fill="currentColor"/>
+                <line x1="74" y1="6" x2="120" y2="6" stroke="currentColor" stroke-width="0.6"/>
               </svg>
             </div>
-            <p class="letter-eyebrow">Bismillāhir Raḥmānir Raḥīm</p>
-            <h2 class="letter-title">You are Invited</h2>
+
+            <p class="letter-title">You are Invited</p>
+
             <div class="letter-names">
               <span>Musthakeem</span>
               <em>&amp;</em>
               <span>Safra</span>
             </div>
+
             <p class="letter-date">01 · 08 · 2026</p>
+
             <button class="btn-primary" id="openFullBtn">
-              <span>Open Invitation</span>
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;">
+              <span>Open Full Invitation</span>
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px;">
                 <path d="M5 12h14M13 5l7 7-7 7"/>
               </svg>
             </button>
