@@ -39,17 +39,22 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
   width: 100%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+body {
+  width: 100%;
+  min-height: 100vh;
   overflow-x: hidden;
-  scroll-behavior: smooth;
   background: var(--coffee-darkest);
   color: var(--coffee-dark);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-overflow-scrolling: touch;
 }
-body { min-height: 100vh; }
 
 /* ============ PRELOADER ============ */
 .preloader {
@@ -1537,4 +1542,68 @@ body { min-height: 100vh; }
   .figure-groom, .figure-bride, .grand-names, .grand-eyebrow, .grand-date, .scroll-hint, .couple-center, .figure-spotlight, .orbit { opacity: 1 !important; transform: none !important; }
   .figure-groom { transform: none !important; }
   .figure-bride { transform: none !important; }
+}
+
+/* ============ MOBILE PERFORMANCE OPTIMIZATIONS ============
+   Disable heavy GPU effects (blur, mix-blend, backdrop-filter),
+   reduce particle counts, and simplify shadows for smooth 60fps scroll.
+*/
+@media (hover: none) and (pointer: coarse) {
+  /* Kill backdrop-filter - the biggest scroll-jank culprit on mobile */
+  .hero-frame,
+  .invite-frame,
+  .venue-card,
+  .rsvp-card,
+  .cd-box {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Lower opacity of blur orbs and reduce blur radius */
+  .bg-orb {
+    filter: blur(28px);
+    opacity: 0.25;
+  }
+
+  /* Ease off paper-texture mix-blend — repaints on every scroll frame */
+  .invitation::before,
+  .invite-scene::before,
+  .venue-scene::before {
+    opacity: 0.18;
+  }
+
+  /* Simpler card shadows */
+  .venue-card,
+  .rsvp-card,
+  .invite-frame,
+  .hero-frame,
+  .parent-card,
+  .dress-card {
+    box-shadow: 0 10px 28px rgba(62, 39, 35, 0.22);
+  }
+
+  /* Halve continuous particles */
+  .spark:nth-child(n+13) { display: none; }
+  .petal:nth-child(n+7) { display: none; }
+  .fe:nth-child(n+6) { display: none; }
+
+  /* Turn off floating notes in envelope (heavy compositing during landing) */
+  .floating-notes { display: none; }
+
+  /* Simpler drop-shadows on figures */
+  .figure { filter: drop-shadow(0 12px 18px rgba(0,0,0,0.45)); }
+
+  /* Guarantee smooth momentum scroll on iOS */
+  html, body { -webkit-overflow-scrolling: touch; }
+
+  /* Make scroll-triggered reveals snappier (less transform distance) */
+  .reveal { transform: translateY(20px); transition-duration: 0.7s; }
+}
+
+/* Very small screens — even fewer effects */
+@media (max-width: 420px) {
+  .fe { display: none; }              /* skip floating emojis on tiny phones */
+  .spark:nth-child(n+9) { display: none; }
+  .petal:nth-child(n+5) { display: none; }
+  .invite-frame { padding: 40px 18px 34px; }
 }

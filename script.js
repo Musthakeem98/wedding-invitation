@@ -38,9 +38,14 @@
   }
   ensureLottieOrFallback();
 
+  /* --------- Mobile detection --------- */
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+                || window.matchMedia('(max-width: 768px)').matches;
+  const isSmallMobile = window.matchMedia('(max-width: 420px)').matches;
+
   /* --------- Sparkle particles (persistent gold background) --------- */
   const sparkles = $('#sparkles');
-  const SPARKLE_COUNT = 24;
+  const SPARKLE_COUNT = isSmallMobile ? 8 : (isMobile ? 12 : 24);
   for (let i = 0; i < SPARKLE_COUNT; i++) {
     const s = document.createElement('span');
     s.className = 'spark';
@@ -90,7 +95,12 @@
     // Add .enter to trigger all grand-scene animations only now
     requestAnimationFrame(() => invitation.classList.add('enter'));
 
-    document.body.style.overflow = 'auto';
+    // Restore natural document scrolling — clear ALL inline overflow so the
+    // CSS (body { overflow-x: hidden }) handles it. Setting overflow-y: auto
+    // fights the browser's default scroll on trackpad/touch.
+    document.body.style.overflow = '';
+    document.body.style.overflowY = '';
+    document.documentElement.style.overflow = '';
     setTimeout(() => {
       musicToggle.classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -140,8 +150,15 @@
 
     // Brighter, more visible palette - skip dark browns
     const colors = ['#D4A659', '#E6C88A', '#FFF3D1', '#FBF7EF', '#B08D57', '#B87333', '#D9BE7A'];
-    const confettiCount = smaller ? 80 : 200;
-    const fireworkCount = smaller ? 20 : 50;
+    // Lower particle counts on mobile so the phone GPU stays smooth
+    const base = smaller ? 80 : 200;
+    const fwBase = smaller ? 20 : 50;
+    const confettiCount = isSmallMobile ? Math.round(base * 0.35)
+                        : isMobile      ? Math.round(base * 0.55)
+                        : base;
+    const fireworkCount = isSmallMobile ? Math.round(fwBase * 0.4)
+                        : isMobile      ? Math.round(fwBase * 0.55)
+                        : fwBase;
 
     // Multi-origin bursts (center + top corners + bottom corners)
     const origins = smaller
@@ -333,13 +350,15 @@
     chordIndex++;
   }
 
-  function startMusic() {
-    if (musicPlaying) return;
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Create the AudioContext + graph synchronously (must happen inside user gesture on iOS)
+  function initAudioContext() {
+    if (audioCtx) return true;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return false;
+      audioCtx = new Ctx();
       musicMaster = audioCtx.createGain();
       musicMaster.gain.value = 0.0001;
-      // Simple delay-based reverb
       const delay = audioCtx.createDelay(2);
       delay.delayTime.value = 0.32;
       const feedback = audioCtx.createGain();
@@ -352,7 +371,15 @@
       delay.connect(wet);
       wet.connect(audioCtx.destination);
       musicMaster.connect(audioCtx.destination);
+      return true;
+    } catch (e) {
+      return false;
     }
+  }
+
+  function startMusic() {
+    if (musicPlaying) return;
+    if (!initAudioContext()) return;
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
     musicMaster.gain.cancelScheduledValues(audioCtx.currentTime);
@@ -377,12 +404,18 @@
   }
 
   musicToggle.addEventListener('click', () => {
+    // Prime + resume synchronously inside user gesture (iOS requirement)
+    initAudioContext();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     if (musicPlaying) stopMusic(); else startMusic();
   });
 
-  // Try to auto-start music once the invitation opens (respecting browser autoplay policies).
-  // A user gesture (clicking "Open Invitation") already happened, so this should succeed.
+  // Prime audio in the Open Invitation click (user gesture),
+  // then start music playback shortly after.
   openFullBtn.addEventListener('click', () => {
+    // Sync: create + resume AudioContext in the user gesture
+    initAudioContext();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     setTimeout(() => {
       if (!musicPlaying) startMusic();
     }, 900);
