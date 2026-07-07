@@ -377,6 +377,31 @@
     }
   }
 
+  // The classic iOS Web Audio unlock — call synchronously in a user gesture.
+  // Playing a 1-sample silent buffer forces iOS Safari/Chrome to fully
+  // activate the audio graph so subsequent oscillators actually output sound.
+  let audioUnlocked = false;
+  function unlockAudio() {
+    if (audioUnlocked || !audioCtx) return;
+    try {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const buffer = audioCtx.createBuffer(1, 1, 22050);
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(audioCtx.destination);
+      source.start(0);
+      // Also play a very short, near-silent oscillator to prime the graph
+      const primeOsc = audioCtx.createOscillator();
+      const primeGain = audioCtx.createGain();
+      primeGain.gain.value = 0.0001;
+      primeOsc.connect(primeGain);
+      primeGain.connect(audioCtx.destination);
+      primeOsc.start(audioCtx.currentTime);
+      primeOsc.stop(audioCtx.currentTime + 0.05);
+      audioUnlocked = true;
+    } catch (e) {}
+  }
+
   function startMusic() {
     if (musicPlaying) return;
     if (!initAudioContext()) return;
@@ -384,7 +409,7 @@
 
     musicMaster.gain.cancelScheduledValues(audioCtx.currentTime);
     musicMaster.gain.setValueAtTime(musicMaster.gain.value, audioCtx.currentTime);
-    musicMaster.gain.linearRampToValueAtTime(0.35, audioCtx.currentTime + 1.2);
+    musicMaster.gain.linearRampToValueAtTime(0.55, audioCtx.currentTime + 1.2);
 
     playChord();
     musicInterval = setInterval(playChord, beat * 1000);
@@ -404,21 +429,32 @@
   }
 
   musicToggle.addEventListener('click', () => {
-    // Prime + resume synchronously inside user gesture (iOS requirement)
     initAudioContext();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    unlockAudio();
     if (musicPlaying) stopMusic(); else startMusic();
   });
 
-  // Prime audio in the Open Invitation click (user gesture),
+  // Prime + unlock audio in the Open Invitation click (user gesture),
   // then start music playback shortly after.
   openFullBtn.addEventListener('click', () => {
-    // Sync: create + resume AudioContext in the user gesture
     initAudioContext();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    unlockAudio();
     setTimeout(() => {
       if (!musicPlaying) startMusic();
     }, 900);
+  });
+
+  // Also unlock audio on the very first tap/click anywhere else, in case
+  // the user opens the invitation but the initial gesture wasn't enough.
+  ['touchend', 'click'].forEach(evt => {
+    document.addEventListener(evt, function firstTouch() {
+      initAudioContext();
+      unlockAudio();
+      if (audioUnlocked) {
+        document.removeEventListener('touchend', firstTouch);
+        document.removeEventListener('click', firstTouch);
+      }
+    }, { once: false, passive: true });
   });
 
   function showToast(text) {
