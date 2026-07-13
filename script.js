@@ -14,30 +14,6 @@
     setTimeout(() => preloader.classList.add('hide'), 2600);
   });
 
-  /* --------- Lottie load detection (fall back to emoji if animations don't load) --------- */
-  function ensureLottieOrFallback() {
-    const players = document.querySelectorAll('lottie-player');
-    // If the custom element didn't register at all, immediately fallback
-    if (!('customElements' in window) || !customElements.get('lottie-player')) {
-      document.body.classList.add('no-lottie');
-      return;
-    }
-    let anyLoaded = false;
-    players.forEach(p => {
-      p.addEventListener('ready', () => { anyLoaded = true; });
-      p.addEventListener('load', () => { anyLoaded = true; });
-      p.addEventListener('error', () => {
-        p.style.display = 'none';
-        p.parentElement.querySelector('.figure-fallback').style.display = 'block';
-      });
-    });
-    // If nothing loaded within 4s, fall back
-    setTimeout(() => {
-      if (!anyLoaded) document.body.classList.add('no-lottie');
-    }, 4000);
-  }
-  ensureLottieOrFallback();
-
   /* --------- Mobile detection --------- */
   const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches
                 || window.matchMedia('(max-width: 768px)').matches;
@@ -86,7 +62,6 @@
     // Big celebration first
     celebrate();
     starburstPulse();
-    welcomeFlash();
     flashScreen();
 
     // Reveal the experience
@@ -132,15 +107,6 @@
     void s.offsetWidth;
     s.classList.add('burst');
     setTimeout(() => s.classList.remove('burst'), 2000);
-  }
-
-  function welcomeFlash() {
-    const w = document.getElementById('welcomeText');
-    if (!w) return;
-    w.classList.remove('show');
-    void w.offsetWidth;
-    setTimeout(() => w.classList.add('show'), 400);
-    setTimeout(() => w.classList.remove('show'), 2600);
   }
 
   /* --------- Celebration confetti + fireworks --------- */
@@ -220,8 +186,8 @@
   document.body.style.overflow = 'hidden';
 
 
-  /* --------- Countdown (target: 01 Aug 2026, 12:00 PM Sri Lanka UTC+05:30) --------- */
-  const target = new Date('2026-08-01T12:00:00+05:30').getTime();
+  /* --------- Countdown (target: 01 Aug 2026, 1:00 PM Sri Lanka UTC+05:30) --------- */
+  const target = new Date('2026-08-01T13:00:00+05:30').getTime();
   const cdDays = $('#cdDays'),
         cdHours = $('#cdHours'),
         cdMins = $('#cdMins'),
@@ -259,202 +225,50 @@
   $$('.reveal').forEach((el) => io.observe(el));
 
 
-  /* --------- WhatsApp RSVP link --------- */
-  const rsvpBtn = $('#rsvpBtn');
-  const rsvpMsg = encodeURIComponent(
-    "Assalamu Alaikum\n\nI am confirming my attendance to the wedding of Musthakeem & Safra on 01 August 2026 at Ilma Reception Hall, Mawanella.\n\nJazakAllah Khair"
-  );
-  rsvpBtn.href = `https://wa.me/94774804214?text=${rsvpMsg}`;
-
-
-  /* --------- Background Music (Web Audio API — ambient chord progression) --------- */
-  let audioCtx = null;
-  let musicMaster = null;
-  let musicInterval = null;
+  /* --------- Background Music (HTMLAudioElement) --------- */
+  const bgMusic = document.getElementById('bgMusic');
   let musicPlaying = false;
 
-  // Pachelbel's Canon-inspired progression in D — the classic wedding feel
-  const chords = [
-    [146.83, 220.00, 293.66, 369.99], // D  major (D-A-D-F#)
-    [110.00, 220.00, 277.18, 329.63], // A  major (A-A-C#-E)
-    [123.47, 246.94, 293.66, 369.99], // Bm      (B-B-D-F#)
-    [ 92.50, 184.99, 277.18, 369.99], // F#m     (F#-F#-C#-F#)
-    [ 98.00, 196.00, 293.66, 392.00], // G  major (G-G-D-G)
-    [146.83, 220.00, 293.66, 369.99], // D  major
-    [ 98.00, 196.00, 293.66, 392.00], // G  major
-    [110.00, 220.00, 277.18, 329.63], // A  major
-  ];
-  // Music-box melody (two notes per chord) sitting an octave above
-  const melody = [
-    [739.99, 659.26], // F#5 → E5
-    [554.37, 659.26], // C#5 → E5
-    [739.99, 587.33], // F#5 → D5
-    [554.37, 440.00], // C#5 → A4
-    [493.88, 587.33], // B4  → D5
-    [739.99, 659.26], // F#5 → E5
-    [493.88, 587.33], // B4  → D5
-    [554.37, 659.26], // C#5 → E5
-  ];
-  let chordIndex = 0;
-  const beat = 5.2; // slower, more romantic tempo
+  if (bgMusic) {
+    bgMusic.volume = 0.7;
 
-  function playPluck(freq, when, duration, peak, type) {
-    const osc = audioCtx.createOscillator();
-    osc.type = type || 'sine';
-    osc.frequency.value = freq;
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.0001, when);
-    gain.gain.exponentialRampToValueAtTime(peak, when + 0.04);
-    gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
-    osc.connect(gain);
-    gain.connect(musicMaster);
-    osc.start(when);
-    osc.stop(when + duration + 0.05);
-  }
-
-  function playChord() {
-    if (!audioCtx || !musicMaster) return;
-    const now = audioCtx.currentTime;
-    const chord = chords[chordIndex % chords.length];
-    const mel = melody[chordIndex % melody.length];
-
-    // Pad chord — warm sine + triangle for piano-ish body
-    chord.forEach((freq, i) => {
-      [freq, freq * 2].forEach((f, k) => {
-        const osc = audioCtx.createOscillator();
-        osc.type = k === 0 ? 'sine' : 'triangle';
-        osc.frequency.value = f;
-        const gain = audioCtx.createGain();
-        const peak = k === 0 ? 0.075 : 0.022;
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(peak, now + 1.2);
-        gain.gain.exponentialRampToValueAtTime(peak * 0.55, now + beat * 0.65);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + beat);
-        osc.detune.value = (i - chord.length / 2) * 2;
-        osc.connect(gain);
-        gain.connect(musicMaster);
-        osc.start(now);
-        osc.stop(now + beat + 0.1);
-      });
+    bgMusic.addEventListener('play', () => {
+      musicPlaying = true;
+      musicToggle.classList.add('playing');
     });
-
-    // Music-box melody — pluck two notes per chord
-    playPluck(mel[0], now + 0.15, 2.4, 0.13, 'sine');
-    playPluck(mel[0] * 2, now + 0.15, 1.6, 0.035, 'sine'); // sparkle overtone
-    playPluck(mel[1], now + beat * 0.55, 2.4, 0.12, 'sine');
-    playPluck(mel[1] * 2, now + beat * 0.55, 1.6, 0.032, 'sine');
-
-    // Soft bass root pulse on beat
-    playPluck(chord[0] / 2, now + 0.05, beat * 0.9, 0.06, 'sine');
-
-    chordIndex++;
-  }
-
-  // Create the AudioContext + graph synchronously (must happen inside user gesture on iOS)
-  function initAudioContext() {
-    if (audioCtx) return true;
-    try {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return false;
-      audioCtx = new Ctx();
-      musicMaster = audioCtx.createGain();
-      musicMaster.gain.value = 0.0001;
-      const delay = audioCtx.createDelay(2);
-      delay.delayTime.value = 0.32;
-      const feedback = audioCtx.createGain();
-      feedback.gain.value = 0.35;
-      const wet = audioCtx.createGain();
-      wet.gain.value = 0.4;
-      musicMaster.connect(delay);
-      delay.connect(feedback);
-      feedback.connect(delay);
-      delay.connect(wet);
-      wet.connect(audioCtx.destination);
-      musicMaster.connect(audioCtx.destination);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  // The classic iOS Web Audio unlock — call synchronously in a user gesture.
-  // Playing a 1-sample silent buffer forces iOS Safari/Chrome to fully
-  // activate the audio graph so subsequent oscillators actually output sound.
-  let audioUnlocked = false;
-  function unlockAudio() {
-    if (audioUnlocked || !audioCtx) return;
-    try {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const buffer = audioCtx.createBuffer(1, 1, 22050);
-      const source = audioCtx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audioCtx.destination);
-      source.start(0);
-      // Also play a very short, near-silent oscillator to prime the graph
-      const primeOsc = audioCtx.createOscillator();
-      const primeGain = audioCtx.createGain();
-      primeGain.gain.value = 0.0001;
-      primeOsc.connect(primeGain);
-      primeGain.connect(audioCtx.destination);
-      primeOsc.start(audioCtx.currentTime);
-      primeOsc.stop(audioCtx.currentTime + 0.05);
-      audioUnlocked = true;
-    } catch (e) {}
+    bgMusic.addEventListener('pause', () => {
+      musicPlaying = false;
+      musicToggle.classList.remove('playing');
+    });
+    bgMusic.addEventListener('error', () => {
+      musicPlaying = false;
+      musicToggle.classList.remove('playing');
+    });
   }
 
   function startMusic() {
-    if (musicPlaying) return;
-    if (!initAudioContext()) return;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    musicMaster.gain.cancelScheduledValues(audioCtx.currentTime);
-    musicMaster.gain.setValueAtTime(musicMaster.gain.value, audioCtx.currentTime);
-    musicMaster.gain.linearRampToValueAtTime(0.55, audioCtx.currentTime + 1.2);
-
-    playChord();
-    musicInterval = setInterval(playChord, beat * 1000);
-    musicPlaying = true;
-    musicToggle.classList.add('playing');
+    if (!bgMusic) return;
+    const p = bgMusic.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => { /* autoplay blocked; user must tap the toggle */ });
+    }
   }
 
   function stopMusic() {
-    if (!musicPlaying || !audioCtx) return;
-    musicMaster.gain.cancelScheduledValues(audioCtx.currentTime);
-    musicMaster.gain.setValueAtTime(musicMaster.gain.value, audioCtx.currentTime);
-    musicMaster.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
-    clearInterval(musicInterval);
-    musicInterval = null;
-    musicPlaying = false;
-    musicToggle.classList.remove('playing');
+    if (!bgMusic) return;
+    bgMusic.pause();
   }
 
   musicToggle.addEventListener('click', () => {
-    initAudioContext();
-    unlockAudio();
     if (musicPlaying) stopMusic(); else startMusic();
   });
 
-  // Prime + unlock audio in the Open Invitation click (user gesture),
-  // then start music playback shortly after.
+  // Try to start the song when the invitation opens (user gesture is required
+  // for mobile autoplay — the tap on this button counts).
   openFullBtn.addEventListener('click', () => {
-    initAudioContext();
-    unlockAudio();
     setTimeout(() => {
       if (!musicPlaying) startMusic();
     }, 900);
-  });
-
-  // Also unlock audio on the very first tap/click anywhere else, in case
-  // the user opens the invitation but the initial gesture wasn't enough.
-  ['touchend', 'click'].forEach(evt => {
-    document.addEventListener(evt, function firstTouch() {
-      initAudioContext();
-      unlockAudio();
-      if (audioUnlocked) {
-        document.removeEventListener('touchend', firstTouch);
-        document.removeEventListener('click', firstTouch);
-      }
-    }, { once: false, passive: true });
   });
 
   function showToast(text) {

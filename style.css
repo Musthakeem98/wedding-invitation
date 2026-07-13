@@ -597,9 +597,8 @@ body {
     linear-gradient(180deg, #1F120A 0%, #2A1810 50%, #1F120A 100%);
   color: var(--pearl);
   overflow: hidden;
-  padding: 40px 16px 60px;
+  padding: 60px 16px 60px;
   min-height: 100vh;
-  height: 100vh;
   gap: 0;
 }
 
@@ -628,9 +627,14 @@ body {
   color: var(--gold-light);
   letter-spacing: 6px;
   text-transform: uppercase;
-  font-size: 11px;
-  margin: 0 0 12px;
+  font-size: 12px;
+  margin: 0 0 24px;
+  padding: 0 12px;
+  text-align: center;
+  white-space: nowrap;
   opacity: 0;
+  position: relative;
+  z-index: 2;
 }
 .experience.enter .grand-eyebrow { animation: fadeIn 1.2s ease-out 0.4s forwards; }
 @keyframes fadeIn { to { opacity: 1; } }
@@ -679,73 +683,49 @@ body {
 
 .figure {
   position: relative;
-  width: clamp(110px, 22vw, 160px);
+  width: clamp(130px, 24vw, 180px);
   height: auto;
   opacity: 0;
-}
-.figure-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  padding: 8px;
-  background: var(--gold-gradient);
-  background-size: 200% 200%;
-  animation: shimmer 6s ease-in-out infinite;
-  box-shadow:
-    0 24px 40px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(212, 166, 89, 0.25);
-}
-.figure-frame::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  border: 1px solid rgba(212, 166, 89, 0.5);
-}
-.figure-frame::after {
-  content: '';
-  position: absolute;
-  inset: -18px;
-  border-radius: 50%;
-  border: 1px dashed rgba(212, 166, 89, 0.35);
-}
-.figure-inner {
-  width: 100%; height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 25%, #4a3122, #1F120A 90%);
-  border: 3px solid rgba(255, 248, 231, 0.7);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  transform-origin: bottom center;
-}
-.figure-emoji {
-  font-size: clamp(70px, 15vw, 110px);
-  line-height: 1;
-  display: block;
-  transform: translateY(6%);
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
-  animation: figureBob 3.6s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
 }
 
-/* Lottie animation player fills the medallion */
-.lottie-figure {
-  width: 110%;
-  height: 110%;
+/* Single combined couple image */
+.couple-stage-single {
+  justify-content: center;
+}
+.figure-couple {
+  width: clamp(240px, 60vw, 380px);
+  opacity: 0;
+  transform: translateY(60px) scale(0.7);
+}
+.experience.enter .figure-couple {
+  animation: coupleEntrance 2s cubic-bezier(0.25, 0.9, 0.35, 1.15) 0.6s both;
+}
+@keyframes coupleEntrance {
+  0%   { opacity: 0; transform: translateY(60px) scale(0.7); }
+  30%  { opacity: 1; }
+  70%  { transform: translateY(-10px) scale(1.04); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.couple-img {
+  width: 100%;
+  height: auto;
   display: block;
-  transform: translateY(2%);
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.4));
+  object-fit: contain;
+  filter:
+    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 18px rgba(212, 166, 89, 0.28));
+  transform-origin: bottom center;
+  animation: figureSway 6s ease-in-out infinite;
 }
-/* Fallback emoji is hidden by default when Lottie is available */
-.figure-fallback { display: none; }
-.no-lottie .lottie-figure { display: none; }
-.no-lottie .figure-fallback { display: block; }
-.figure-bride .figure-emoji { animation-delay: 0.6s; }
-@keyframes figureBob {
-  0%, 100% { transform: translateY(6%); }
-  50%      { transform: translateY(4%) scale(1.02); }
+
+@keyframes figureSway {
+  0%, 100% { transform: translateY(0) rotate(-0.8deg); }
+  50%      { transform: translateY(-5px) rotate(0.8deg); }
 }
+
 .figure-label { display: none; }
 
 /* Spotlight beneath each figure */
@@ -1505,6 +1485,7 @@ body {
 @media (max-width: 700px) {
   .couple-stage { gap: 8px; }
   .figure { width: 90px; height: 180px; }
+  .figure-couple { width: clamp(200px, 65vw, 320px); height: auto; }
   .grand-line { width: min(60px, 15vw); }
 }
 
@@ -1525,6 +1506,7 @@ body {
 
 @media (max-width: 460px) {
   .figure { width: 76px; height: 150px; }
+  .figure-couple { width: min(78vw, 300px); height: auto; }
   .couple-center { width: 46px; height: 46px; }
   .heart-pulse svg { width: 24px; height: 24px; }
 }
@@ -1539,7 +1521,7 @@ body {
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition-duration: 0.25s !important; }
-  .figure-groom, .figure-bride, .grand-names, .grand-eyebrow, .grand-date, .scroll-hint, .couple-center, .figure-spotlight, .orbit { opacity: 1 !important; transform: none !important; }
+  .figure-groom, .figure-bride, .figure-couple, .grand-names, .grand-eyebrow, .grand-date, .scroll-hint, .couple-center, .figure-spotlight, .orbit { opacity: 1 !important; transform: none !important; }
   .figure-groom { transform: none !important; }
   .figure-bride { transform: none !important; }
 }
